@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 from pathlib import Path
 import torch
@@ -62,7 +63,10 @@ def main(event_bytes):
 
     # bytes to tensors
     x, y, p, t = decode_event_bytes(event_bytes)
-    t, _ = torch.sort(t)
+
+    # sort events by time
+    i = torch.argsort(t)
+    x, y, p, t = x[i], y[i], p[i], t[i]
 
     # tensors to histogram
     histogram = StackedHistogram(bins=10, height=720, width=1280)
